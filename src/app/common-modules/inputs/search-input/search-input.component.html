@@ -1,0 +1,20 @@
+<div class="search" [style]="style">
+  <ng-content></ng-content>
+  <input
+    (ngModelChange)="onChange($event)"
+    [(ngModel)]="value"
+    [maxlength]="maxLength"
+    [placeholder]="placeholder"
+    (focus)="onFocus($event)"
+    class="search__input"
+    type="text"
+  />
+  <span
+    (click)="handleEmpty()"
+    *ngIf="value"
+    class="search__close khan-i khan-i__close"
+  ></span>
+  <button class="search__btn" *ngIf="withBtn" (click)="onSearchClicked()">
+    <span class="khan-i khan-i__search"></span>
+  </button>
+</div>

@@ -1,0 +1,14 @@
+<div class="content-container by-city-content">
+  <div class="search-container">
+    <app-search-input [formControl]="searchControl"></app-search-input>
+  </div>
+  <div class="filter-btn-container">
+    <app-forecast-filter-button
+      *ngFor="let config of filterButtonsConfig"
+      [config]="config"
+      [currentMode]="currentFilter"
+      (click)="currentFilter = config.value">
+    </app-forecast-filter-button>
+  </div>
+  <app-main-table></app-main-table>
+</div>

@@ -1,0 +1,15 @@
+.filter-btn {
+  background-color: #fff;
+  padding: 5px 15px;
+  border-radius: 5px;
+  color: #6c757d;
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  &_active {
+    background-color: #2dbe60;
+    color: #fff;
+  }
+}

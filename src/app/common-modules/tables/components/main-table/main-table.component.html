@@ -1,0 +1,16 @@
+<table>
+  <thead>
+    <tr>
+      <th *ngFor="let col of cols">
+        {{ col.label }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let row of rows">
+      <td *ngFor="let col of cols">
+        {{ row[col.id] }}
+      </td>
+    </tr>
+  </tbody>
+</table>
