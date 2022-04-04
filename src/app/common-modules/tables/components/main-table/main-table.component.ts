@@ -1,9 +1,5 @@
 import {Component, Input} from '@angular/core';
-
-export interface IColumn {
-  id: string;
-  label: string;
-}
+import {IColumn} from '../../../../core/models/interfaces/column.interface';
 
 @Component({
   selector: 'app-main-table',
@@ -11,30 +7,6 @@ export interface IColumn {
   styleUrls: ['./main-table.component.scss']
 })
 export class MainTableComponent {
-  @Input() cols: IColumn[] = [
-    {
-      id: 'city',
-      label: 'City Name'
-    },
-    {
-      id: '03',
-      label: '03:00'
-    },
-    {
-      id: '06',
-      label: '06:00'
-    },
-  ];
-  @Input() rows: { [key: string]: any }[] = [
-    {
-      'city': 'London',
-      '03': '15*',
-      '06': '16*'
-    },
-    {
-      'city': 'New York',
-      '03': '25*',
-      '06': '46*'
-    },
-  ];
+  @Input() cols: IColumn[] = [];
+  @Input() rows: { [key: string]: any }[] = [];
 }

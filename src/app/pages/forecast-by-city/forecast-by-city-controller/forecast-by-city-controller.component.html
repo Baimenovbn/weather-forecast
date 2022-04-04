@@ -1,4 +1,5 @@
 <div class="content-container by-city-content">
+  <div class="error" *ngIf="isError">{{ errorMessage }}</div>
   <div class="search-container">
     <app-search-input [formControl]="searchControl"></app-search-input>
   </div>
@@ -6,9 +7,9 @@
     <app-forecast-filter-button
       *ngFor="let config of filterButtonsConfig"
       [config]="config"
-      [currentMode]="currentFilter"
-      (click)="currentFilter = config.value">
+      [currentMode]="currentMode"
+      (click)="setConfig(config)">
     </app-forecast-filter-button>
   </div>
-  <app-main-table></app-main-table>
+  <app-main-table [cols]="cols" [rows]="rows"></app-main-table>
 </div>
