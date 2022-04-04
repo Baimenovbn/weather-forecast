@@ -15,7 +15,7 @@ import {NG_VALUE_ACCESSOR} from '@angular/forms';
   ]
 })
 export class SearchInputComponent extends ValueAccessor<string>{
-  @Input() placeholder = 'Поиск';
+  @Input() placeholder = 'Just start typing your city';
   @Input() maxLength = 70;
   @Input() style = '';
   @Input() withBtn = false;

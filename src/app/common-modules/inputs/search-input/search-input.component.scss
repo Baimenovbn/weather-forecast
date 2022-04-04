@@ -5,7 +5,7 @@
 .search {
   height: 36px;
   border-radius: 5px;
-  border: 1px solid var(--border-color-gray);
+  border: 1px solid #e0e0e0;
   display: flex;
   outline: none;
   align-items: center;
@@ -17,22 +17,21 @@
     padding: 10px 0 10px 15px;
     flex-grow: 1;
     border-radius: 4px;
-    font: var(--font-medium);
-    color: var(--primary-black);
+    color: #242325;
 
     &::placeholder {
-      color: var(--font-color-lighter);
+      color: #828282;
     }
   }
 
   &:focus-within {
-    border-color: var(--primary-green);
+    border-color: #2dbe60;
   }
 
   &__close {
     font-size: 14px;
     padding: 0 19px 0 10px;
-    color: var(--font-color-lighter);
+    color: #828282;
 
     &:hover {
       cursor: pointer;

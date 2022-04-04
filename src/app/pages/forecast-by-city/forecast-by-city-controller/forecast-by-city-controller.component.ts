@@ -8,10 +8,12 @@ import {WeatherService} from "../../../shared/services/weather.service";
 import {IColumn} from '../../../core/models/interfaces/column.interface';
 import {messages} from '../../../core/constants/messages';
 import {hourlyCols} from '../../../core/constants/hourly-cols';
-import {EHourlyHeaders} from '../../../core/models/enums/hourly-headers.enum';
+import {hourlyHeaderKeys} from '../../../core/models/enums/hourly-headers.enum';
 import {dailyCols} from '../../../core/constants/daily-cols';
+import {ICityWeatherResponse} from '../../../core/models/interfaces/city-weather-response.interface';
 import {dailyHeadersKeys} from '../../../core/models/enums/daily-headers.enum';
 
+const CELCIUS_SIGN = '°';
 
 @Component({
   selector: 'app-forecast-by-city-controller',
@@ -28,12 +30,12 @@ export class ForecastByCityControllerComponent extends SubscribeDestroyerDirecti
   set currentMode(mode: EForecastMode) {
     this._currentMode = mode;
     this.cols = (this.currentMode === EForecastMode.BY_HOUR) ? hourlyCols : dailyCols;
+    this.rows = (this.currentMode === EForecastMode.BY_HOUR) ? this.hourlyRows : this.dailyRows;
   }
 
   cities: string[] = [];
 
-  public readonly EFilterType = EForecastMode;
-  public readonly filterButtonsConfig: ISelect<EForecastMode>[] = [
+  filterButtonsConfig: ISelect<EForecastMode>[] = [
     {
       label: 'By Hour',
       value: EForecastMode.BY_HOUR,
@@ -43,31 +45,20 @@ export class ForecastByCityControllerComponent extends SubscribeDestroyerDirecti
       value: EForecastMode.BY_DAY,
     }
   ];
-
   errorMessage = messages.cityNotFound;
   isError = false;
   cols: IColumn[] = hourlyCols;
-  rows: any[] = [
-    {
-      'city': 'London',
-      [EHourlyHeaders.THREE]: '15*',
-      [EHourlyHeaders.SIX]: '15*',
-      [EHourlyHeaders.NINE]: '15*',
-      [EHourlyHeaders.TWELVE]: '15*',
-      [EHourlyHeaders.FIFTEEN]: '15*',
-      [EHourlyHeaders.EIGHTEEN]: '15*',
-      [EHourlyHeaders.TWENTY_ONE]: '15*',
-      [EHourlyHeaders.TWENTY_FOUR]: '15*',
-    },
-  ];
+  rows: any[] = [];
 
-  dailyRows: any = [];
+  dailyRows: any[] = [];
+  hourlyRows: any[] = []
   currentCity = '';
 
   constructor(
     private weatherService: WeatherService,
   ) {
     super();
+    this.rows = this.hourlyRows;
   }
 
   ngOnInit(): void {
@@ -78,7 +69,7 @@ export class ForecastByCityControllerComponent extends SubscribeDestroyerDirecti
     this.searchControl.valueChanges
       .pipe(
 
-        debounceTime(400),
+        debounceTime(500),
         distinctUntilChanged(),
         tap(() => this.isError = false),
         filter(search => search),
@@ -94,21 +85,42 @@ export class ForecastByCityControllerComponent extends SubscribeDestroyerDirecti
         takeUntil(this.isDestroyed$),
       )
       .subscribe((res) => {
-        if (res.daily) {
-          const row: { [key: string]: any }[] = [{ city: this.currentCity }];
-          res.daily.forEach((day, i) => {
-            row.push({
-              label: dailyHeadersKeys[i],
-              value: Math.round((day.temp.max + day.temp.min) / 2)
-            });
-          });
-
-          this.rows = [...this.rows, row];
-        }
+        this.setDailyRows(res);
+        this.setHourlyRows(res);
+        this.rows = (this.currentMode === EForecastMode.BY_HOUR) ? this.hourlyRows : this.dailyRows;
       })
   }
 
   setConfig(config: ISelect<EForecastMode>) {
     this.currentMode = config.value;
+  }
+
+  private setDailyRows(res: ICityWeatherResponse) {
+    if (res.daily) {
+      const row: { [key: string]: any } = { city: this.currentCity };
+
+
+      dailyHeadersKeys.forEach((key, i) => {
+        row[key] = Math.round((res.daily[i].temp.min + res.daily[i].temp.max) / 2) + CELCIUS_SIGN;
+      })
+
+      this.dailyRows = [...this.dailyRows, row];
+    }
+  }
+
+  private setHourlyRows(res: ICityWeatherResponse) {
+    if (res.hourly) {
+      const row: { [key: string]: any } = { city: this.currentCity };
+
+
+      hourlyHeaderKeys.forEach((key, i) => {
+        const temperatureIndex =
+          (i === 0)
+            ? 0
+            : i + 2;
+        row[key] = res.hourly[temperatureIndex].temp + CELCIUS_SIGN
+      })
+      this.hourlyRows = [...this.hourlyRows, row];
+    }
   }
 }
