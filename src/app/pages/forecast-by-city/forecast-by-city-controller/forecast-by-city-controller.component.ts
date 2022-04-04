@@ -73,6 +73,7 @@ export class ForecastByCityControllerComponent extends SubscribeDestroyerDirecti
         distinctUntilChanged(),
         tap(() => this.isError = false),
         filter(search => search),
+
         switchMap(city => this.weatherService.getCityByName(city)),
         tap(res => this.isError = !Boolean(res.length)),
         filter(res => Boolean(res.length)),
